@@ -1,7 +1,7 @@
 # Logins Component
 
 ![status-img](https://img.shields.io/static/v1?label=production&message=Lockwise,%20Firefox%20iOS&color=darkgreen)
-![status-img](https://img.shields.io/static/v1?label=not implemented&message=Firefox%20Preview,%20Desktop&color=darkred)
+![status-img](https://img.shields.io/static/v1?label=not%20implemented&message=Firefox%20Preview,%20Desktop&color=darkred)
 
 ## Implementation Overview
 Logins implements encrypted storage for login records on top of SQLcipher, with
@@ -69,7 +69,7 @@ De-duplication compares the records for same the username and same url, but with
 
 ## Testing
 
-![status-img](https://img.shields.io/static/v1?label=test status&message=acceptable&color=darkgreen)
+![status-img](https://img.shields.io/static/v1?label=test%20status&message=acceptable&color=darkgreen)
 
 Our goal is to seek an _acceptable_ level of test coverage, which basically means we feel confident that if we are making changes to the component the testing will alert us to related regressions.  When making changes in an area, make an effort to improve (or minimally not reduce) coverage. Test coverage assessment includes:
 * [rust tests](https://github.com/mozilla/application-services/blob/master/testing/sync-test/src/logins.rs)
