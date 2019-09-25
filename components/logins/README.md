@@ -1,7 +1,7 @@
 # Logins Component
 
-![status-img](https://img.shields.io/static/v1?label=production&message=Lockwise, Firefox iOS&color=darkgreen)
-![status-img](https://img.shields.io/static/v1?label=not implemented&message=Firefox Preview, Desktop&color=darkred)
+![status-img](https://img.shields.io/static/v1?label=production&message=Lockwise,%20Firefox%20iOS&color=darkgreen)
+![status-img](https://img.shields.io/static/v1?label=not implemented&message=Firefox%20Preview,%20Desktop&color=darkred)
 
 ## Implementation Overview
 Logins implements encrypted storage for login records on top of SQLcipher, with
