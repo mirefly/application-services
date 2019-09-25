@@ -1,16 +1,13 @@
 # Logins Component
-- ![status-img](https://img.shields.io/static/v1?label=status&message=production&color=darkgreen)
- ![products](https://img.shields.io/static/v1?label=products&message=Lockwise | Firefox iOS)
-- ![status-img](https://img.shields.io/static/v1?label=status&message=not implemented&color=darkred)  ![products](https://img.shields.io/static/v1?label=products&message=Firefox Preview | Desktop)
 
+![status-img](https://img.shields.io/static/v1?label=production&message=Lockwise, Firefox iOS&color=darkgreen)
+![status-img](https://img.shields.io/static/v1?label=not implemented&message=Firefox Preview, Desktop&color=darkred)
 
 ## Implementation Overview
 Logins implements encrypted storage for login records on top of SQLcipher, with
 support for Sync (using the [sync15](https://github.com/mozilla/application-services/tree/master/components/sync15) crate). It uses a slight modification on top
-of the database schema that [firefox-ios](https://github.com/mozilla-mobile/firefox-ios/blob/faa6a2839abf4da2c54ff1b3291174b50b31ab2c/Storage/SQL/SQLiteLogins.swift) used.  Notable difference include many of the queries and
-how sync is performed in order to allow syncs to complete with
-fewer database operations. See the header comment in `src/schema.rs` for an
-overview of the schema.
+of the database schema that [firefox-ios](https://github.com/mozilla-mobile/firefox-ios/blob/faa6a2839abf4da2c54ff1b3291174b50b31ab2c/Storage/SQL/SQLiteLogins.swift) used.  Notable difference include many of the queries and how sync is performed in order to allow syncs to complete with
+fewer database operations. See the header comment in `src/schema.rs` for an overview of the schema.
 
 ## Directory structure
 The relevant directories are as follows:
@@ -21,7 +18,7 @@ The relevant directories are as follows:
   editing logins using the code in `src`.
 - `ffi`: The Rust public FFI bindings. This is a (memory-unsafe, by necessity)
   API that is exposed to Kotlin and Swift. It leverages the `ffi_support` crate
-  to avoid many issues and make it more safe than it othrwise would be. At the
+  to avoid many issues and make it more safe than it otherwise would be. At the
   time of this writing, it uses JSON for marshalling data over the FFI, however
   in the future we will likely use protocol buffers.
 - `android`: This contains android bindings to logins, written in Kotlin. These
@@ -50,7 +47,7 @@ Reference the [Logins chapter of the synconomicon](https://mozilla.github.io/app
 When the user signs out of their Firefox Account, we reset the storage and clear the shared parent.
 
 ### Merging records
-When records are added, the logins component performs a three-way merge between the local record, the remote record and the shared parent (last update on the server).  Details on the merging algorithm are detailed in the [generic sync rfc](https://github.com/mozilla/application-services/blob/1e2ba102ee1709f51d200a2dd5e96155581a81b2/docs/design/remerge/rfc.md#three-way-merge-algorithm)
+When records are added, the logins component performs a three-way merge between the local record, the remote record and the shared parent (last update on the server).  Details on the merging algorithm are contained in the [generic sync rfc](https://github.com/mozilla/application-services/blob/1e2ba102ee1709f51d200a2dd5e96155581a81b2/docs/design/remerge/rfc.md#three-way-merge-algorithm)
 
 ### Record de-duplication
 
@@ -71,6 +68,7 @@ De-duplication compares the records for same the username and same url, but with
 - TODO [Expand and update API docs](https://github.com/mozilla/application-services/issues/1747)
 
 ## Testing
+
 ![status-img](https://img.shields.io/static/v1?label=test status&message=acceptable&color=darkgreen)
 
 Our goal is to seek an _acceptable_ level of test coverage, which basically means we feel confident that if we are making changes to the component the testing will alert us to related regressions.  When making changes in an area, make an effort to improve (or minimally not reduce) coverage. Test coverage assessment includes:
