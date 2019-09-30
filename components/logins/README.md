@@ -4,10 +4,12 @@
 ![status-img](https://img.shields.io/static/v1?label=not%20implemented&message=Firefox%20Preview,%20Desktop&color=darkred)
 
 ## Implementation Overview
-Logins implements encrypted storage for login records on top of SQLcipher, with
-support for Sync (using the [sync15](https://github.com/mozilla/application-services/tree/master/components/sync15) crate). It uses a slight modification on top
-of the database schema that [firefox-ios](https://github.com/mozilla-mobile/firefox-ios/blob/faa6a2839abf4da2c54ff1b3291174b50b31ab2c/Storage/SQL/SQLiteLogins.swift) used.  Notable difference include many of the queries and how sync is performed in order to allow syncs to complete with
-fewer database operations. See the header comment in `src/schema.rs` for an overview of the schema.
+Logins implements encrypted storage for login records on top of SQLcipher, with support for Sync (using the [sync15](https://github.com/mozilla/application-services/tree/master/components/sync15) crate). It used a modified version of the database schema that [firefox-ios](https://github.com/mozilla-mobile/firefox-ios/blob/faa6a2839abf4da2c54ff1b3291174b50b31ab2c/Storage/SQL/SQLiteLogins.swift) used.  Notable difference include:
+- the queries
+- how sync is performed in order to allow syncs to complete with fewer database operations
+- timestamps, iOS uses microseconds, where the logins component uses milliseconds.
+
+See the header comment in `src/schema.rs` for an overview of the schema.
 
 ## Directory structure
 The relevant directories are as follows:
@@ -39,7 +41,8 @@ The relevant directories are as follows:
 
 ### Record storage
 
-Login records are encrypted and stored locally. For any record that does not have a shared parent (meaning that it has been synced), the login component tracks that the record has never been synced.
+At any given time records can exist in 3 places, the local storage, the remote record, and the shared parent.  The shared parent refers to a record that has been synced previously and is referred to in the code as the mirror.
+Login records are encrypted and stored locally. For any record that does not have a shared parent the login component tracks that the record has never been synced.
 
 Reference the [Logins chapter of the synconomicon](https://mozilla.github.io/application-services/synconomicon/ch01.1-logins.html) for detailed information on the record storage format.
 
@@ -47,13 +50,12 @@ Reference the [Logins chapter of the synconomicon](https://mozilla.github.io/app
 When the user signs out of their Firefox Account, we reset the storage and clear the shared parent.
 
 ### Merging records
-When records are added, the logins component performs a three-way merge between the local record, the remote record and the shared parent (last update on the server).  Details on the merging algorithm are contained in the [generic sync rfc](https://github.com/mozilla/application-services/blob/1e2ba102ee1709f51d200a2dd5e96155581a81b2/docs/design/remerge/rfc.md#three-way-merge-algorithm)
+When records are added, the logins component performs a three-way merge between the local record, the remote record and the shared parent (last update on the server).  Details on the merging algorithm are contained in the [generic sync rfc](https://github.com/mozilla/application-services/blob/1e2ba102ee1709f51d200a2dd5e96155581a81b2/docs/design/remerge/rfc.md#three-way-merge-algorithm).
 
 ### Record de-duplication
 
-De-duplication compares the records for same the username and same url, but with different passwords.  Deduplication logic is based on age, the username and hostname it performs a record update unless it older than the local record. If the change is older than our local records, and you have changed the same field on both, the record is not updated.
-De-duplication compares the records for same the username and same url, but with different passwords.  Deduplication logic is based on age, the username and hostname.
-- If the changes are newer than the local record it performs an update.
+De-duplication compares the records for same the username and same url, but with different passwords. De-duplication compares the records for same the username and same url, but with different passwords.  Deduplication logic is based on age, the username and hostname.
+- If the changes are more recent than the local record it performs an update.
 - If the change is older than our local records, and you have changed the same field on both, the record is not updated.
 
 ## Getting started
@@ -73,9 +75,8 @@ De-duplication compares the records for same the username and same url, but with
 
 Our goal is to seek an _acceptable_ level of test coverage, which basically means we feel confident that if we are making changes to the component the testing will alert us to related regressions.  When making changes in an area, make an effort to improve (or minimally not reduce) coverage. Test coverage assessment includes:
 * [rust tests](https://github.com/mozilla/application-services/blob/master/testing/sync-test/src/logins.rs)
-* TODO add link [android tests]()
-* TODO add link [ios tests]()
-* TODO add link [ffi tests]
+* TODO add link [android tests](https://github.com/mozilla/application-services/tree/master/components/logins/android/src/test/java/mozilla/appservices/logins)
+* TODO add link [ios tests](https://github.com/mozilla/application-services/blob/master/megazords/ios/MozillaAppServicesTests/LoginsTests.swift)
 * TODO [measure and report test coverage of logins component](https://github.com/mozilla/application-services/issues/1745)
 
 ## Telemetry
